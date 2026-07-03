@@ -1,39 +1,196 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
 <head>
-<meta charset="UTF-8">
-<title>블로그 글</title>
-<link rel="stylesheet"
-	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PawPrint Blog - 일기 보기</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-color: #FF7F50;
+            --secondary-color: #FFB6C1;
+            --bg-color: #FFF8F5;
+            --text-dark: #2C3E50;
+            --text-light: #7F8C8D;
+            --accent-color: #FFA07A;
+        }
+
+        body {
+            font-family: 'Nunito', 'Malgun Gothic', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, .brand-title {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Navbar Styling */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 4px 20px rgba(255, 127, 80, 0.08);
+            border-bottom: 2px solid #FFEBE6;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Article Details Card */
+        .detail-card {
+            background-color: white;
+            border: none;
+            border-radius: 2rem;
+            box-shadow: 0 10px 30px rgba(255, 127, 80, 0.08);
+            border: 1px solid #FFF0EC;
+            padding: 3rem 2.5rem;
+            margin-top: 3rem;
+            margin-bottom: 5rem;
+        }
+
+        .author-badge {
+            background-color: #FFF5F2;
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .article-content {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: #4A5568;
+            white-space: pre-wrap; /* Preserve line breaks */
+        }
+
+        .btn-back {
+            border-radius: 50px;
+            font-weight: 700;
+            border: 2px solid #DDD;
+            background: white;
+            color: var(--text-dark);
+            padding: 0.5rem 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #F8F9FA;
+            border-color: #CCC;
+        }
+
+        .btn-modify {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-modify:hover {
+            background-color: #E67246;
+            box-shadow: 0 4px 12px rgba(255, 127, 80, 0.35);
+        }
+
+        .btn-delete {
+            background-color: #FFF0F2;
+            color: #FF4757;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            padding: 0.5rem 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete:hover {
+            background-color: #FFD2D7;
+        }
+    </style>
 </head>
 <body>
-	<div class="p-5 mb-5 text-center bg-light">
-		<h1 class="mb-3">My Blog</h1>
-		<h4 class="mb-3">블로그에 오신 것을 환영합니다.</h4>
-	</div>
 
-	<div class="container mt-5">
-		<div class="row">
-			<div class="col-lg-8">
-				<article>
-					<input type="hidden" id="article-id" th:value="${article.id}">
-					<header class="mb-4">
-						<h1 class="fw-bolder mb-1" th:text="${article.title}"></h1>
-						<div class="text-muted fst-italic mb-2"
-							th:text="|Posted on ${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')} By ${article.author}|"></div>
-					</header>
-					<section class="mb-5">
-						<p class="fs-5 mb-4" th:text="${article.content}"></p>
-					</section>
-					<button type="button" id="modify-btn"
-						th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
-						class="btn btn-primary btn-sm">수정</button>
-					<button type="button" id="delete-btn"
-						class="btn btn-secondary btn-sm">삭제</button>
-				</article>
-			</div>
-		</div>
-	</div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top py-3">
+        <div class="container">
+            <a class="navbar-brand brand-title fw-bold" href="/articles">
+                <span class="nav-paw me-2">🐾</span> PawPrint Blog
+            </a>
+            <div class="d-flex align-items-center">
+                <button type="button" class="btn btn-outline-secondary rounded-pill fw-bold px-4 border-2"
+                    onclick="location.href='/logout'">
+                    <i class="bi bi-box-arrow-right me-1"></i> 로그아웃
+                </button>
+            </div>
+        </div>
+    </nav>
 
-	<script src="/js/article.js"></script>
+    <!-- Main Container -->
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-9">
+                <div class="card detail-card">
+                    <input type="hidden" id="article-id" th:value="${article.id}">
+                    
+                    <!-- Article Header -->
+                    <header class="mb-4 pb-4 border-bottom border-light-subtle">
+                        <div class="d-flex align-items-center justify-content-between mb-3">
+                            <span class="author-badge">
+                                <i class="bi bi-person-circle me-2"></i> 댕집사 (<span th:text="${article.author}">author</span>)
+                            </span>
+                            <span class="text-secondary small fw-semibold">
+                                <i class="bi bi-clock me-1"></i> <span th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd HH:mm')}">2026-06-29 18:29</span>
+                            </span>
+                        </div>
+                        <h1 class="display-6 text-primary-emphasis fw-bold mb-3" th:text="${article.title}">블로그 글 제목</h1>
+                    </header>
+
+                    <!-- Article Body Content -->
+                    <section class="mb-5">
+                        <div class="article-content" th:text="${article.content}">
+                            블로그 본문 내용이 출력되는 영역입니다...
+                        </div>
+                    </section>
+
+                    <!-- Actions Bar -->
+                    <footer class="pt-4 border-top border-light-subtle d-flex justify-content-between align-items-center">
+                        <button type="button" class="btn btn-back" onclick="location.href='/articles'">
+                            <i class="bi bi-arrow-left me-1"></i> 목록으로
+                        </button>
+                        
+                        <div class="d-flex gap-2">
+                            <!-- Edit Button -->
+                            <button type="button" id="modify-btn"
+                                th:onclick="|location.href='@{/new-article?id={articleId}(articleId=${article.id})}'|"
+                                class="btn btn-modify">
+                                <i class="bi bi-pencil-square me-1"></i> 수정
+                            </button>
+                            <!-- Delete Button -->
+                            <button type="button" id="delete-btn" class="btn btn-delete">
+                                <i class="bi bi-trash3 me-1"></i> 삭제
+                            </button>
+                        </div>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/article.js"></script>
 </body>
+</html>
