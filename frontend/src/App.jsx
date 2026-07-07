@@ -41,6 +41,50 @@ const INITIAL_MEMBERS = [
   { id: 6, name: '정수지', age: 30, gender: '여성', recency: 29, frequencyMonthly: 0, frequencyWeekly: 0, visitDropRate: -1.0, contractPeriod: 1, isLockerUsed: 0, isClothesUsed: 0 }
 ];
 
+// 8x8 Pixel Art Maps for Fashion MNIST neural network simulation
+const APPAREL_MAPS = {
+  tshirt: [
+    0,1,1,1,1,1,1,0,
+    1,1,1,1,1,1,1,1,
+    1,0,1,1,1,1,0,1,
+    0,0,1,1,1,1,0,0,
+    0,0,1,1,1,1,0,0,
+    0,0,1,1,1,1,0,0,
+    0,0,1,1,1,1,0,0,
+    0,0,1,1,1,1,0,0
+  ],
+  sneaker: [
+    0,0,0,0,0,1,1,0,
+    0,0,0,0,1,1,1,0,
+    0,0,1,1,1,1,1,0,
+    0,1,1,1,1,1,1,0,
+    1,1,1,1,1,1,1,1,
+    1,1,1,1,1,1,1,1,
+    0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0
+  ],
+  trouser: [
+    0,1,1,1,1,1,1,0,
+    0,1,1,0,0,1,1,0,
+    0,1,1,0,0,1,1,0,
+    0,1,1,0,0,1,1,0,
+    0,1,1,0,0,1,1,0,
+    0,1,1,0,0,1,1,0,
+    0,1,1,0,0,1,1,0,
+    0,1,1,0,0,1,1,0
+  ],
+  bag: [
+    0,0,0,1,1,0,0,0,
+    0,0,1,0,0,1,0,0,
+    0,1,1,1,1,1,1,0,
+    0,1,1,1,1,1,1,0,
+    0,1,1,1,1,1,1,0,
+    0,1,1,1,1,1,1,0,
+    0,1,1,1,1,1,1,0,
+    0,0,0,0,0,0,0,0
+  ]
+};
+
 // All 23 Office Automation Programs Database
 const AUTOMATION_PROGRAMS = [
   {
@@ -248,10 +292,10 @@ def delete_duplicates(directory):
                 hashes[file_hash] = path
     print("성공: 중복 파일 정리가 끝났습니다.")`,
     logs: [
-      '[INFO] 드라이브 폴더 하위 탐색 트리 생성...',
+      '[INFO]  하위 탐색 트리 생성...',
       '[INFO] 각 파일 이진 해싱 MD5 연산 수행 중...',
       '[INFO] 중복 해시 매칭 감지: 4개 중복 파일 포착.',
-      '[SUCCESS] 중복 복사본 파일 4건 영구 삭제 조치 (디스크 용량 확보).'
+      '[SUCCESS] 중복 복사본 파일 4건 영구 삭제 조치.'
     ]
   },
   {
@@ -303,7 +347,7 @@ def watch_and_backup(source_dir, backup_dir):
             shutil.copy(os.path.join(source_dir, f), os.path.join(backup_dir, f))
         before = after`,
     logs: [
-      '[INFO] 실시간 드라이브 모니터 스레드 가동...',
+      '[INFO] 실시간 모니터 스레드 가동...',
       '[INFO] 소스 감시지: C:/Gym/CheckInLogs',
       '[ALERT] 신규 로그 파일 감지: checkin_20260707.txt',
       '[SUCCESS] 백업 저장소로 자동 파일 안전 복사 실행 완료.'
@@ -316,7 +360,7 @@ def watch_and_backup(source_dir, backup_dir):
     category: 'crawl',
     categoryName: '🌐 웹 크롤링 및 수집',
     title: '11. 네이버 뉴스 키워드 크롤링',
-    description: '특정 키워드(예: 헬스장 트렌드) 관련 네이버 뉴스 제목 및 링크를 긁어 엑셀로 저장합니다.',
+    description: '뉴스 제목 및 링크를 긁어 엑셀로 저장합니다.',
     command: 'python scrape_news.py',
     code: `import requests
 from bs4 import BeautifulSoup
@@ -344,7 +388,7 @@ def scrape_news(query):
     category: 'crawl',
     categoryName: '🌐 웹 크롤링 및 수집',
     title: '12. 쇼핑몰 최저가 모니터링',
-    description: '경쟁사 시설 이용권 금액이나 단백질 헬스 보충제 최저가를 스크랩하여 보고합니다.',
+    description: '경쟁사 금액이나 보충제 최저가를 스크랩하여 보고합니다.',
     command: 'python monitor_prices.py',
     code: `import requests
 from bs4 import BeautifulSoup
@@ -354,8 +398,7 @@ def get_product_price(url):
     res = requests.get(url, headers=headers)
     soup = BeautifulSoup(res.text, 'html.parser')
     price = soup.select_one('.product_price').text
-    return price
-print("가장 저렴한 파우더 가격 조회 완료.")`,
+    return price`,
     logs: [
       '[INFO] 보충제 쇼핑몰 모니터링 세션 시작...',
       '[INFO] User-Agent 브라우저 세션 모방 패킷 송신...',
@@ -368,7 +411,7 @@ print("가장 저렴한 파우더 가격 조회 완료.")`,
     category: 'crawl',
     categoryName: '🌐 웹 크롤링 및 수집',
     title: '13. 웹 이미지 일괄 다운로더',
-    description: '지정한 이미지 갤러리 웹주소에 링크된 오리지널 사진 파일을 한꺼번에 내려받습니다.',
+    description: '지정한 주소에 링크된 사진 파일을 한꺼번에 다운로드합니다.',
     command: 'python download_images.py',
     code: `import os
 import requests
@@ -397,7 +440,7 @@ def download_images(url, output_dir):
     category: 'crawl',
     categoryName: '🌐 웹 크롤링 및 수집',
     title: '14. 블로그 검색 순위 추적',
-    description: '체육관 홍보 블로그 글이 네이버 특정 검색어 통합검색 뷰에서 몇 위에 노출되는지 체크합니다.',
+    description: '체육관 홍보 블로그 글이 검색 통합 뷰에서 몇 위에 노출되는지 체크합니다.',
     command: 'python track_blog.py',
     code: `import requests
 from bs4 import BeautifulSoup
@@ -421,7 +464,7 @@ def get_blog_rank(query, my_blog_url):
     category: 'crawl',
     categoryName: '🌐 웹 크롤링 및 수집',
     title: '15. 실시간 주식 시세 요약',
-    description: '관심 금융 종목코드(예: 삼성전자)들의 현재 주가를 수집하여 엑셀 시트에 바인딩합니다.',
+    description: '관심 금융 종목코드들의 현재 주가를 수집하여 엑셀 시트에 바인딩합니다.',
     command: 'python get_stocks.py',
     code: `import requests
 from bs4 import BeautifulSoup
@@ -475,7 +518,7 @@ def send_attachment_email(smtp_server, port, sender, password, receiver, file_pa
     server.sendmail(sender, receiver, msg.as_string())
     server.quit()`,
     logs: [
-      '[INFO] SMTP 클라이언트 접속 준비 (smtp.gmail.com:587)...',
+      '[INFO] SMTP 클라이언트 접속 준비...',
       '[INFO] 전송 계정 보안 인증 로그인 절차 통과...',
       '[INFO] gym_member_report.xlsx 바이너리 변환 및 패킹 첨부 완료.',
       '[SUCCESS] 메일 전송 성공 (상태 코드: 250 Mail accepted).'
@@ -486,7 +529,7 @@ def send_attachment_email(smtp_server, port, sender, password, receiver, file_pa
     category: 'msg',
     categoryName: '✉️ 메일 및 메시지 발송',
     title: '17. 개인화 대량 메일 발송',
-    description: '엑셀 명단의 회원명, 이메일 주소, 잔여일을 매핑하여 개인 맞춤 경고 알림 메일을 대량 발송합니다.',
+    description: '엑셀 명단의 회원명, 이메일 주소를 매핑하여 안내 알림 메일을 대량 발송합니다.',
     command: 'python send_bulk_emails.py',
     code: `import pandas as pd
 import smtplib
@@ -526,8 +569,7 @@ def post_slack_message(webhook_url, text):
     print("슬랙 브리핑 성공")`,
     logs: [
       '[INFO] 대시보드 통계 요약 적재...',
-      '[INFO] 슬랙 수신 웹훅 URL 헤더 설정...',
-      '[INFO] JSON 페이로드 구조화 완료.',
+      '[INFO] 슬랙 웹훅 URL 헤더 설정 및 JSON 페이로드 구조화...',
       '[SUCCESS] 슬랙 채널 [#gym-alerts] 메시지 발송 완료 (200 OK).'
     ]
   },
@@ -536,7 +578,7 @@ def post_slack_message(webhook_url, text):
     category: 'msg',
     categoryName: '✉️ 메일 및 메시지 발송',
     title: '19. 텔레그램 긴급 알림 봇',
-    description: '예측 결과 극단적 고위험 회원이 감지될 시 즉각 텔레그램 봇으로 매니저에게 실시간 알림을 보냅니다.',
+    description: '예측 결과 극단적 고위험 회원이 감지될 시 즉각 텔레그램 봇으로 긴급 알림을 보냅니다.',
     command: 'python telegram_alert.py',
     code: `import requests
 
@@ -582,7 +624,7 @@ def merge_pdfs(pdf_list, output_path):
     category: 'doc',
     categoryName: '📄 문서 및 이미지 자동화',
     title: '21. 이미지에서 글자 추출 OCR',
-    description: '영수증 사진이나 계약서 캡처 이미지 속의 텍스트를 OCR 인공지능으로 텍스트화합니다.',
+    description: '영수증 사진이나 계약서 이미지 속의 텍스트를 OCR 인공지능으로 텍스트화합니다.',
     command: 'python run_ocr.py',
     code: `import pytesseract
 from PIL import Image
@@ -596,7 +638,7 @@ def extract_text_from_image(image_path, output_txt):
       '[INFO] pytesseract 패키지 가동...',
       '[INFO] 로드 이미지: receipt_scan.jpg (한글+영어 언어 팩 로딩)',
       '[INFO] 픽셀 라인 분석 및 텍스트 맵 생성 중...',
-      '[SUCCESS] 글자 추출 성공: 텍스트 파일 receipt_text.txt 쓰기 완료.'
+      '[SUCCESS] 글자 추출 성공: receipt_text.txt 쓰기 완료.'
     ]
   },
   {
@@ -645,8 +687,7 @@ def watermark_and_resize(input_dir, output_dir, logo_path):
             img.convert("RGB").save(os.path.join(output_dir, file), "JPEG")`,
     logs: [
       '[INFO] PIL 이미지 컨버터 기동...',
-      '[INFO] 로고 소스 파일 오픈: gym_logo_watermark.png',
-      '[INFO] 이미지 리사이징 (1280x720) 및 알파 블렌딩 적용 중...',
+      '[INFO] 로고 소스 파일 오픈 및 알파 블렌딩 리사이징 적용 중...',
       '[SUCCESS] 이미지 일괄 삽입 완료. output/ 경로에 JPEG 파일로 저장.'
     ]
   }
@@ -911,6 +952,293 @@ def cosine_similarity(a, b):
   }
 ];
 
+// Database of all source code files we created for the Code Gallery Tab
+const GALLERY_CODES = {
+  springboot_controller: {
+    title: '☕ ChurnApiController.java (API 컨트롤러)',
+    path: 'src/main/java/me/shinsunyoung/springbootdeveloper/controller/ChurnApiController.java',
+    description: '리액트 대시보드의 예측 요청을 자바 환경에서 수신하여 이탈 상태 확률 및 가이드를 반환해 주는 컨트롤러입니다.',
+    code: `package me.shinsunyoung.springbootdeveloper.controller;
+
+import me.shinsunyoung.springbootdeveloper.service.ChurnPredictionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/churn")
+@CrossOrigin(origins = "*")
+public class ChurnApiController {
+
+    @Autowired
+    private ChurnPredictionService churnPredictionService;
+
+    @PostMapping("/predict")
+    public ResponseEntity<Map<String, Object>> predict(@RequestBody Map<String, Object> requestData) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            float recency = ((Number) requestData.getOrDefault("recency", 0)).floatValue();
+            float frequencyMonthly = ((Number) requestData.getOrDefault("frequencyMonthly", 0)).floatValue();
+            float frequencyWeekly = ((Number) requestData.getOrDefault("frequencyWeekly", 0)).floatValue();
+            float visitDropRate = ((Number) requestData.getOrDefault("visitDropRate", 0)).floatValue();
+            float contractPeriod = ((Number) requestData.getOrDefault("contractPeriod", 0)).floatValue();
+            float age = ((Number) requestData.getOrDefault("age", 0)).floatValue();
+            float isLockerUsed = ((Number) requestData.getOrDefault("isLockerUsed", 0)).floatValue();
+            float isClothesUsed = ((Number) requestData.getOrDefault("isClothesUsed", 0)).floatValue();
+
+            float[] features = new float[] {
+                recency, frequencyMonthly, frequencyWeekly, visitDropRate, contractPeriod, age, isLockerUsed, isClothesUsed
+            };
+
+            double probability = churnPredictionService.predictChurnProbability(features);
+            
+            response.put("success", true);
+            response.put("churnProbability", probability);
+            
+            String riskLevel;
+            if (probability >= 0.7) {
+                riskLevel = "CRITICAL (위험)";
+            } else if (probability >= 0.4) {
+                riskLevel = "WARNING (주의)";
+            } else {
+                riskLevel = "SAFE (안전)";
+            }
+            response.put("riskLevel", riskLevel);
+            
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Error: " + e.getMessage());
+        }
+        return ResponseEntity.ok(response);
+    }
+}`
+  },
+  springboot_service: {
+    title: '☕ ChurnPredictionService.java (ONNX 연동 서비스)',
+    path: 'src/main/java/me/shinsunyoung/springbootdeveloper/service/ChurnPredictionService.java',
+    description: 'Microsoft ONNX Runtime 라이브러리를 바인딩해 RandomForest 기계학습 모델의 다차원 배열 피처 연산을 수행해 줍니다.',
+    code: `package me.shinsunyoung.springbootdeveloper.service;
+
+import ai.onnxruntime.OnnxTensor;
+import ai.onnxruntime.OrtEnvironment;
+import ai.onnxruntime.OrtException;
+import ai.onnxruntime.OrtSession;
+import org.springframework.stereotype.Service;
+
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import java.io.InputStream;
+import java.nio.FloatBuffer;
+import java.util.HashMap;
+import java.util.Map;
+
+@Service
+public class ChurnPredictionService {
+
+    private OrtEnvironment env;
+    private OrtSession session;
+
+    @PostConstruct
+    public void init() {
+        try {
+            this.env = OrtEnvironment.getEnvironment();
+            try (InputStream is = getClass().getResourceAsStream("/models/gym_churn_model.onnx")) {
+                if (is == null) return;
+                byte[] modelBytes = is.readAllBytes();
+                this.session = env.createSession(modelBytes);
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to init ONNX: " + e.getMessage());
+        }
+    }
+
+    public double predictChurnProbability(float[] features) {
+        if (session == null) return mockPrediction(features);
+        try {
+            String inputName = session.getInputNames().iterator().next();
+            long[] shape = new long[]{1, features.length};
+            FloatBuffer buffer = FloatBuffer.wrap(features);
+            
+            try (OnnxTensor inputTensor = OnnxTensor.createTensor(env, buffer, shape)) {
+                Map<String, OnnxTensor> inputs = new HashMap<>();
+                inputs.put(inputName, inputTensor);
+                
+                try (OrtSession.Result results = session.run(inputs)) {
+                    var outputNames = session.getOutputNames();
+                    if (outputNames.size() >= 2) {
+                        String probOutputName = (String) outputNames.toArray()[1];
+                        Object value = results.get(probOutputName).get().getValue();
+                        if (value instanceof Map[]) {
+                            Map<Long, Float> probabilities = ((Map<Long, Float>[]) value)[0];
+                            return probabilities.get(1L);
+                        }
+                    }
+                    return mockPrediction(features);
+                }
+            }
+        } catch (Exception e) {
+            return mockPrediction(features);
+        }
+    }
+
+    private double mockPrediction(float[] features) {
+        float recency = features[0];
+        float freq = features[1];
+        double prob = 0.1;
+        if (recency > 15) prob += 0.4;
+        if (freq < 5) prob += 0.3;
+        return Math.min(0.95, Math.max(0.05, prob));
+    }
+}`
+  },
+  oracle_sql: {
+    title: '🛢️ oracle_gym_db.sql (오라클 스키마 설계)',
+    path: 'oracle_gym_db.sql',
+    description: '오라클 데이터베이스에 가입/결제/출석 로그 테이블을 설계하고, PL/SQL 프로시저를 생성해 ML 투입 파라미터(미방문일, 주간/월간 출석수)를 취합하는 쿼리입니다.',
+    code: `-- 2. MEMBER (회원) 테이블 생성
+CREATE TABLE MEMBER (
+    MEMBER_ID         NUMBER GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
+    NAME              VARCHAR2(50) NOT NULL,
+    GENDER            VARCHAR2(10) CONSTRAINT CK_MEMBER_GENDER CHECK (GENDER IN ('M', 'F')),
+    JOIN_DATE         DATE DEFAULT SYSDATE NOT NULL,
+    MEMBERSHIP_TYPE   VARCHAR2(20),
+    IS_LOCKER_USED    NUMBER(1) DEFAULT 0 CHECK (IS_LOCKER_USED IN (0, 1)),
+    IS_CLOTHES_USED   NUMBER(1) DEFAULT 0 CHECK (IS_CLOTHES_USED IN (0, 1)),
+    STATUS            VARCHAR2(20) DEFAULT 'ACTIVE'
+);
+
+-- 7. PL/SQL 프로시저 생성: 회원별 이탈 예측용 특성값(Feature) 집계 추출
+CREATE OR REPLACE PROCEDURE PR_GET_CHURN_FEATURES (
+    P_MEMBER_ID IN NUMBER,
+    O_RECENCY OUT NUMBER,
+    O_FREQ_MONTHLY OUT NUMBER,
+    O_FREQ_WEEKLY OUT NUMBER
+) AS
+    V_LAST_VISIT TIMESTAMP;
+BEGIN
+    SELECT MAX(CHECK_IN_TIME) INTO V_LAST_VISIT FROM ATTENDANCE WHERE MEMBER_ID = P_MEMBER_ID;
+    IF V_LAST_VISIT IS NULL THEN
+        O_RECENCY := 999;
+    ELSE
+        O_RECENCY := ROUND(SYSDATE - CAST(V_LAST_VISIT AS DATE));
+    END IF;
+
+    SELECT COUNT(DISTINCT TRUNC(CHECK_IN_TIME)) INTO O_FREQ_MONTHLY FROM ATTENDANCE
+    WHERE MEMBER_ID = P_MEMBER_ID AND CHECK_IN_TIME >= SYSTIMESTAMP - INTERVAL '30' DAY;
+
+    SELECT COUNT(DISTINCT TRUNC(CHECK_IN_TIME)) INTO O_FREQ_WEEKLY FROM ATTENDANCE
+    WHERE MEMBER_ID = P_MEMBER_ID AND CHECK_IN_TIME >= SYSTIMESTAMP - INTERVAL '7' DAY;
+END;
+/`
+  },
+  train_model: {
+    title: '🧠 train_model.py (AI 이탈 예측 모델 학습)',
+    path: 'train_model.py',
+    description: '사이킷런(scikit-learn) 라이브러리를 통해 가상의 회원 행동 1,000건을 훈련시켜 랜덤포레스트 모델을 만들고, 이를 ONNX 파일로 빌드 저장합니다.',
+    code: `import pandas as pd
+import numpy as np
+from sklearn.ensemble import RandomForestClassifier
+from skl2onnx import to_onnx
+
+np.random.seed(42)
+n_samples = 1000
+recency = np.random.randint(0, 30, n_samples)
+frequency = np.random.randint(0, 30, n_samples)
+contract = np.random.choice([1, 3, 6, 12], n_samples)
+y = np.where((recency > 14) & (frequency < 8), 1, 0)
+X = np.column_stack((recency, frequency, contract))
+
+clf = RandomForestClassifier(n_estimators=100, max_depth=5, random_state=42)
+clf.fit(X, y)
+
+onnx_model = to_onnx(clf, X[:1].astype(np.float32))
+with open("src/main/resources/models/gym_churn_model.onnx", "wb") as f:
+    f.write(onnx_model.SerializeToString())
+print("모델 생성 완료!")`
+  },
+  automation_tools: {
+    title: '📊 automation_tools.py (파이썬 자동화 23선)',
+    path: 'automation_tools.py',
+    description: '엑셀 자동 서식 셀 병합, 폴더 ZIP 일괄 압축, 블로그 노출 분석, 텔레그램 경고 등 23가지 파이썬 업무 비서 코드들의 종합 스크립트 모음입니다.',
+    code: `import os
+import pandas as pd
+import zipfile
+import smtplib
+from PyPDF2 import PdfMerger
+
+# [프로그램 1. 엑셀 통합 병합]
+def merge_excel_files(input_dir, output_file):
+    all_dfs = [pd.read_excel(os.path.join(input_dir, f)) for f in os.listdir(input_dir) if f.endswith('.xlsx')]
+    pd.concat(all_dfs, ignore_index=True).to_excel(output_file, index=False)
+
+# [프로그램 9. 폴더별 ZIP 일괄 압축]
+def bulk_zip(directory):
+    for item in os.listdir(directory):
+        path = os.path.join(directory, item)
+        if os.path.isdir(path):
+            with zipfile.ZipFile(f"{path}.zip", 'w', zipfile.ZIP_DEFLATED) as zipf:
+                for r, _, files in os.walk(path):
+                    for file in files:
+                        zipf.write(os.path.join(r, file))
+
+# [프로그램 20. 여러 PDF 결합]
+def merge_pdfs(pdf_list, output_path):
+    merger = PdfMerger()
+    for pdf in pdf_list: merger.append(pdf)
+    merger.write(output_path)
+    merger.close()`
+  },
+  hongong_ml: {
+    title: '📚 hongong_mldl_practice.py (혼공 ML/DL 실습)',
+    path: 'hongong_mldl_practice.py',
+    description: '생선 분류 KNN, 농어 무게 회귀, 와인 화이트/레드 감별 트리 모델을 각각 기동시키는 파이썬 단독 실습용 세션 파일입니다.',
+    code: `import numpy as np
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LinearRegression
+
+# 1. KNN Classification (생선)
+fish_data = [[25.4, 242.0], [26.3, 290.0], [9.8, 6.7]]
+fish_target = [1, 1, 0]
+kn = KNeighborsClassifier(n_neighbors=1)
+kn.fit(fish_data, fish_target)
+print("KNN 생선 분류 결과:", kn.predict([[30.0, 600.0]]))
+
+# 2. 다항 회귀 (농어 무게)
+perch_length = np.array([8.4, 13.7, 15.0, 22.0])
+perch_weight = np.array([5.9, 32.0, 40.0, 130.0])
+train_poly = np.column_stack((perch_length ** 2, perch_length))
+lr = LinearRegression()
+lr.fit(train_poly, perch_weight)
+print("회귀 예측 무게:", lr.predict([[25.0**2, 25.0]]))`
+  },
+  gen_ai: {
+    title: '🤖 generative_ai_practice.py (생성형 AI 연습)',
+    path: 'generative_ai_practice.py',
+    description: 'GPT-4o 프롬프트 작성 지침, DALL-E 이미지 드로잉 바이너리, RAG 문서의 벡터 유사도 검색(Cosine) 연산을 포함한 파이썬 단독 실습 파일입니다.',
+    code: `import numpy as np
+from openai import OpenAI
+
+# 1. RAG용 코사인 유사도 엔진
+def cosine_similarity(a, b):
+    return np.dot(a, b) / (np.linalg.norm(a) * np.linalg.norm(b))
+
+# 2. OpenAI API 연동 테스트
+def run_gpt_demo():
+    client = OpenAI()
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        messages=[
+            {"role": "system", "content": "너는 체육관 관리 비서이다."},
+            {"role": "user", "content": "이탈 확률 80% 회원 케어 메세지 초안 작성해줘."}
+        ]
+    )
+    print(response.choices[0].message.content)`
+  }
+};
+
 // Initial mock datasets for KNN
 const BREAM_POINTS = [
   { x: 25.4, y: 242.0 }, { x: 26.3, y: 290.0 }, { x: 26.5, y: 340.0 }, { x: 29.0, y: 363.0 },
@@ -1061,6 +1389,10 @@ function App() {
   // AI Churn Model Retraining states
   const [isAiTraining, setIsAiTraining] = useState(false);
   const [aiTrainingLogs, setAiTrainingLogs] = useState(['$ Ready to trigger RandomForest retrain...']);
+
+  // Source Code Gallery Tab State
+  const [selectedGalleryCodeKey, setSelectedGalleryCodeKey] = useState('springboot_controller');
+  const [copySuccess, setCopySuccess] = useState(false);
 
   // Timer useEffect for Project 4
   useEffect(() => {
@@ -1441,6 +1773,8 @@ function App() {
         return `만들면서 배우는 생성 AI 실습실에 온 것을 환영하곰! GPT 챗봇 생성부터 DALL-E, RAG 벡터 검색 과정까지 내 손으로 직접 시뮬레이션해볼 수 있다곰! 🐻🤖`;
       case 'aitraining':
         return `여기가 이탈 모델 학습실이곰! 재학습 버튼을 누르면 RandomForest가 특성 기여도를 계산하고 ONNX로 변환되는 전 과정을 실시간 모사해 준다곰! 🐻🧠`;
+      case 'gallery':
+        return `프로젝트를 만든 모든 파일들을 한 눈에 모은 소스코드 라이브러리라곰! 파일을 하나씩 골라 코드를 📋 복사해 갈 수도 있다곰! 🐻📖`;
       default:
         return `반갑곰! 득근을 위해 오늘도 열심히 코딩하고 운동하곰! 🐻💪`;
     }
@@ -1910,7 +2244,7 @@ function App() {
 
               <Tab eventKey="automation" title="🐍 파이썬 일잘러 자동화 (23선)">
                 <p className="text-secondary small mt-3">
-                  사무 업무 효율을 혁신적으로 줄여주는 파이썬 일잘러 자동화 프로그램 23선입니다. 카테고리별로 스크립트를 둘러보고 동작 과정을 모뮬레이션해 보세요.
+                  사무 업무 효율을 혁신적으로 줄여주는 파이썬 일잘러 자동화 프로그램 23선입니다. 카테고리별로 스크립트를 둘러보고 동작 과정을 모사해 보세요.
                 </p>
 
                 <div className="d-flex gap-2 mb-3 mt-2 overflow-auto pb-2">
@@ -2146,7 +2480,7 @@ function App() {
 
                           <Row className="mt-3 align-items-center">
                             <Col xs={5} className="d-flex flex-column align-items-center">
-                              <span className="small text-secondary mb-2">입력 픽셀 데이터 (14x14)</span>
+                              <span className="small text-secondary mb-2">입력 픽셀 데이터 (8x8)</span>
                               <div style={{
                                 display: 'grid',
                                 gridTemplateColumns: 'repeat(8, 15px)',
@@ -2362,7 +2696,7 @@ function App() {
                           <Form.Group className="mb-2">
                             <Form.Label className="small text-secondary">조회할 고객 회원 명단 선택</Form.Label>
                             <Form.Select className="bg-dark text-white border-secondary rounded-pill px-3 small" value={genAiAgentMember} onChange={e => setGenAiAgentMember(e.target.value)}>
-                              {INITIAL_MEMBERS.map(m => (
+                              {members.map(m => (
                                 <option key={m.id} value={m.name}>{m.name}</option>
                               ))}
                             </Form.Select>
@@ -2476,6 +2810,62 @@ function App() {
                     <div className="code-viewer-container" style={{ maxHeight: '180px' }}>
                       <pre className="m-0"><code style={{ fontSize: '11px' }}>{PYTHON_TRAIN_CODE}</code></pre>
                     </div>
+                  </Col>
+                </Row>
+              </Tab>
+
+              <Tab eventKey="gallery" title="📖 소스코드 갤러리">
+                <p className="text-secondary small mt-3">
+                  이 대시보드 시스템을 구축하는 데 활용된 백엔드(자바), 프런트엔드(리액트), 기계학습 모델링 및 데이터베이스(SQL) 소스코드를 파일별로 나누어 한눈에 쉽게 확인하고 복사할 수 있습니다.
+                </p>
+                <Row className="g-3 mt-1">
+                  <Col md={3}>
+                    <h6 className="fw-bold text-secondary small mb-2">소스코드 파일 선택</h6>
+                    <div className="d-flex flex-column gap-2 overflow-auto" style={{ maxHeight: '420px' }}>
+                      {Object.keys(GALLERY_CODES).map(key => (
+                        <Button
+                          key={key}
+                          variant={selectedGalleryCodeKey === key ? 'info' : 'dark'}
+                          className="text-start py-2 px-3 border-0 small rounded-4"
+                          style={{ fontSize: '12px' }}
+                          onClick={() => {
+                            setSelectedGalleryCodeKey(key);
+                            setCopySuccess(false);
+                          }}
+                        >
+                          {GALLERY_CODES[key].title}
+                        </Button>
+                      ))}
+                    </div>
+                  </Col>
+                  
+                  <Col md={9}>
+                    <Card className="p-3 bg-dark border-secondary rounded-4">
+                      <div className="d-flex justify-content-between align-items-center mb-2">
+                        <span className="small text-secondary">경로: <strong className="text-info">{GALLERY_CODES[selectedGalleryCodeKey].path}</strong></span>
+                        <Button
+                          size="sm"
+                          variant="outline-info"
+                          className="bubbly-btn"
+                          style={{ fontSize: '11px' }}
+                          onClick={() => {
+                            navigator.clipboard.writeText(GALLERY_CODES[selectedGalleryCodeKey].code);
+                            setCopySuccess(true);
+                            setTimeout(() => setCopySuccess(false), 2000);
+                          }}
+                        >
+                          {copySuccess ? '✔️ 복사 완료!' : '📋 코드 복사'}
+                        </Button>
+                      </div>
+                      
+                      <div className="code-viewer-container" style={{ maxHeight: '400px', background: '#090d16', border: '1px solid #1e293b' }}>
+                        <pre className="m-0"><code style={{ fontSize: '11px', color: '#e2e8f0' }}>{GALLERY_CODES[selectedGalleryCodeKey].code}</code></pre>
+                      </div>
+                      
+                      <div className="mt-3 text-secondary small">
+                        <strong>파일 설명:</strong> {GALLERY_CODES[selectedGalleryCodeKey].description}
+                      </div>
+                    </Card>
                   </Col>
                 </Row>
               </Tab>
