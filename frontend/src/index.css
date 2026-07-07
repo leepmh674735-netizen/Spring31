@@ -1,0 +1,89 @@
+/* Bubbly, Cute & Premium Design System */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Outfit:wght@300;400;600;700&display=swap');
+
+:root {
+  font-family: 'Outfit', 'Fredoka One', -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  --bg-primary: #0b0f19;
+  --bg-secondary: #131a2b;
+  --bg-glass: rgba(255, 255, 255, 0.04);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  
+  --color-text-main: #f9fafb;
+  --color-text-muted: #9ca3af;
+  
+  /* Cute Pastel-Neon Colors */
+  --color-mint: #34d399;        /* Safe - Mint Green */
+  --color-sky: #60a5fa;         /* Info - Sky Blue */
+  --color-peach: #fbbf24;       /* Warning - Peach Amber */
+  --color-coral: #f87171;       /* Danger - Coral Pink */
+  
+  background-color: var(--bg-primary);
+  color: var(--color-text-main);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at 50% 0%, #1e1b4b 0%, var(--bg-primary) 80%);
+  overflow-x: hidden;
+}
+
+/* Cute Bubbly Card Panel */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 2px solid var(--border-glass);
+  border-radius: 24px; /* More rounded and cute! */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Bouncy hover transition */
+}
+
+.glass-panel:hover {
+  transform: translateY(-6px);
+  border-color: rgba(96, 165, 250, 0.3);
+  box-shadow: 0 15px 35px rgba(96, 165, 250, 0.15);
+}
+
+/* Monospace Terminal Box custom style */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Keyframes for cute animations */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+  100% { transform: translateY(0px) rotate(0deg); }
+}
+
+@keyframes pulse-glow {
+  0% { box-shadow: 0 0 5px rgba(248, 113, 113, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(248, 113, 113, 0.8); }
+  100% { box-shadow: 0 0 5px rgba(248, 113, 113, 0.4); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
