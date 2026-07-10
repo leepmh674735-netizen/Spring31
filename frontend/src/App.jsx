@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useReducer, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useReducer, useMemo } from 'react';
 import axios from 'axios';
 import { Container, Row, Col, Card, Button, Table, Badge, Form, Tabs, Tab, ProgressBar, Spinner } from 'react-bootstrap';
 import { Line, Doughnut, Scatter, Bar } from 'react-chartjs-2';
@@ -801,7 +801,7 @@ function Counter() {
     id: 5,
     title: '5. 조건부 렌더링 (Condition)',
     description: '로그인 여부 등 특정한 boolean 플래그 조건에 따라 UI를 분기합니다.',
-    code: `{isLoggedIn ? <WelcomeBanner /> : <LoginForm \/>}`,
+    code: `{isLoggedIn ? <WelcomeBanner /> : <LoginForm />}`,
     theory: '자바스크립트 인라인 삼항 연산자나 단축 평가 논리 연산자(&&)를 통해 상태 조건에 맞춰 동적으로 DOM 트리를 렌더링할 수 있습니다.'
   },
   {
@@ -1296,8 +1296,126 @@ with open("gym_churn_model.onnx", "wb") as f:
     f.write(onnx_model.SerializeToString())
 print("모델 학습 및 ONNX 변환 완료!")`;
 
+// Cute SVG Mascot Bear Component
+function Mascot({ probability }) {
+  let state = 'normal';
+  if (probability !== undefined && probability !== null) {
+    if (probability >= 0.7) {
+      state = 'worried';
+    } else if (probability >= 0.4) {
+      state = 'alert';
+    } else {
+      state = 'happy';
+    }
+  }
+
+  return (
+    <div className="mascot-avatar-wrapper" style={{ flexShrink: 0 }}>
+      <svg width="85" height="85" viewBox="0 0 120 120" className={`mascot-svg mascot-${state}`} style={{ overflow: 'visible' }}>
+        {/* Shadow */}
+        <ellipse cx="60" cy="112" rx="35" ry="5" fill="rgba(0,0,0,0.15)" />
+        
+        {/* Ears */}
+        <circle cx="30" cy="35" r="14" fill="#a16207" />
+        <circle cx="30" cy="35" r="8" fill="#fef08a" />
+        
+        <circle cx="90" cy="35" r="14" fill="#a16207" />
+        <circle cx="90" cy="35" r="8" fill="#fef08a" />
+        
+        {/* Muscle Arms or Flexing depending on state */}
+        {state === 'happy' && (
+          <>
+            {/* Flexing Left Arm */}
+            <path d="M 22 70 Q 2 60 7 50 Q 17 45 22 60 Z" fill="#a16207" stroke="#78350f" strokeWidth="1.5" className="arm-flex-left" />
+            <circle cx="7" cy="50" r="5" fill="#fef08a" />
+            <line x1="2" y1="50" x2="12" y2="50" stroke="#94a3b8" strokeWidth="3" />
+            
+            {/* Flexing Right Arm */}
+            <path d="M 98 70 Q 118 60 113 50 Q 103 45 98 60 Z" fill="#a16207" stroke="#78350f" strokeWidth="1.5" className="arm-flex-right" />
+            <circle cx="113" cy="50" r="5" fill="#fef08a" />
+            <line x1="108" y1="50" x2="118" y2="50" stroke="#94a3b8" strokeWidth="3" />
+          </>
+        )}
+        
+        {state === 'worried' && (
+          <>
+            {/* Shivering Arms */}
+            <path d="M 22 75 Q 12 85 18 90" stroke="#a16207" strokeWidth="8" strokeLinecap="round" className="arm-shiver" fill="none" />
+            <path d="M 98 75 Q 108 85 102 90" stroke="#a16207" strokeWidth="8" strokeLinecap="round" className="arm-shiver" fill="none" />
+          </>
+        )}
+        
+        {state !== 'happy' && state !== 'worried' && (
+          <>
+            {/* Standard Arms */}
+            <path d="M 25 75 C 10 75 10 85 25 85" fill="#a16207" />
+            <path d="M 95 75 C 110 75 110 85 95 85" fill="#a16207" />
+          </>
+        )}
+
+        {/* Head / Body */}
+        <circle cx="60" cy="70" r="38" fill="#ca8a04" stroke="#a16207" strokeWidth="2" />
+        
+        {/* Blush Cheeks */}
+        <circle cx="36" cy="76" r="6" fill="#fca5a5" opacity="0.6" />
+        <circle cx="84" cy="76" r="6" fill="#fca5a5" opacity="0.6" />
+        
+        {/* Snout */}
+        <ellipse cx="60" cy="80" rx="14" ry="10" fill="#fef08a" />
+        <polygon points="55,76 65,76 60,82" fill="#451a03" />
+
+        {/* Mouth depending on state */}
+        {state === 'happy' && (
+          <path d="M 54 83 Q 60 89 66 83" stroke="#451a03" strokeWidth="2" fill="none" />
+        )}
+        {state === 'worried' && (
+          <ellipse cx="60" cy="86" rx="4" ry="4" fill="#451a03" />
+        )}
+        {state === 'alert' && (
+          <line x1="55" y1="84" x2="65" y2="84" stroke="#451a03" strokeWidth="2" />
+        )}
+        {state === 'normal' && (
+          <path d="M 56 82 Q 60 85 64 82" stroke="#451a03" strokeWidth="1.5" fill="none" />
+        )}
+
+        {/* Eyes */}
+        {state === 'happy' && (
+          <>
+            <path d="M 40 68 Q 45 62 50 68" stroke="#451a03" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+            <path d="M 70 68 Q 75 62 80 68" stroke="#451a03" strokeWidth="2.5" fill="none" strokeLinecap="round" />
+          </>
+        )}
+        {state === 'worried' && (
+          <>
+            <line x1="42" y1="62" x2="48" y2="68" stroke="#451a03" strokeWidth="3" strokeLinecap="round" />
+            <line x1="78" y1="62" x2="72" y2="68" stroke="#451a03" strokeWidth="3" strokeLinecap="round" />
+            {/* Sweat Drop */}
+            <path d="M 88 45 Q 85 52 88 55 Q 91 52 88 45" fill="#38bdf8" className="sweat-drop" />
+          </>
+        )}
+        {state === 'alert' && (
+          <>
+            <circle cx="45" cy="65" r="4.5" fill="#451a03" />
+            <circle cx="75" cy="65" r="4.5" fill="#451a03" />
+            <circle cx="43" cy="63" r="1.5" fill="white" />
+            <circle cx="73" cy="63" r="1.5" fill="white" />
+          </>
+        )}
+        {state === 'normal' && (
+          <>
+            <circle cx="45" cy="66" r="4.5" fill="#451a03" className="bear-eye" />
+            <circle cx="75" cy="66" r="4.5" fill="#451a03" className="bear-eye" />
+            <circle cx="43" cy="64" r="1.5" fill="white" className="bear-eye-sparkle" />
+            <circle cx="73" cy="64" r="1.5" fill="white" className="bear-eye-sparkle" />
+          </>
+        )}
+      </svg>
+    </div>
+  );
+}
+
 function App() {
-  const [members, setMembers] = useState(INITIAL_MEMBERS);
+  const [members] = useState(INITIAL_MEMBERS);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMember, setSelectedMember] = useState(INITIAL_MEMBERS[0]);
   const [loading, setLoading] = useState(false);
@@ -1452,6 +1570,7 @@ function App() {
         });
         setSimPrediction(response.data);
       } catch (error) {
+        console.warn('API prediction failed, running local fallback model:', error);
         const prob = localPredict({
           recency: simRecency,
           frequencyMonthly: simFreqMonthly,
@@ -2879,7 +2998,7 @@ function App() {
             
             {/* Cute Mascot Profile Header */}
             <div className="mascot-container mb-4">
-              <div className="mascot-avatar">🐻💪</div>
+              <Mascot riskLevel={prediction?.riskLevel} probability={prediction?.churnProbability} />
               <div className="speech-bubble">
                 {getMascotCommentLocal()}
               </div>
